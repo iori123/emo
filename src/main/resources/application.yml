@@ -1,0 +1,82 @@
+server:
+  port: 8990
+  servlet:
+    context-path: /
+swagger-ui: show:true
+logging:
+  level.org.apache.http: DEBUG
+  level.httpclient.wire: DEBUG
+  level.org.springframework.web.client.RestTemplate: DEBUG
+spring:
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.Oracle10gDialect
+    show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = ${DB_HOST})(PORT = ${DB_PORT})) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = ${SERVICE_NAME})))
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+external:
+  alfresco:
+    base: ${ALF_BASE}
+    systemid: ${ALF_SYSTEM_ID}
+    documentid: ${ALF_DOCUMENT_ID}
+    auth:
+      user: ${ALF_AUTH_USER}
+      password: ${ALF_AUTH_PASSWORD}
+    ticket:
+      base: ${ALF_TICKET_BASE}
+    useroefa: ${ALF_USER_OEFA}
+  frontend:
+    url: ${url}
+    urlSiged: ${url_siged}
+    urlAlfresco: ${url_alfresco}
+    urlSso2: ${url_sso2}
+    baseHref: ${base_href}
+    idAplicacion: ${id_aplicacion}
+
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = ${DB_HOST})(PORT = ${DB_PORT})) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = ${SERVICE_NAME})))
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+---
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 10.6.0.15)(PORT = 1532)) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = dvoefabd)))
+    username: SDVP
+    password: desarrollo
+external:
+  alfresco:
+    base: http://10.6.0.24:8080/alfresco
+    systemid: 701
+    documentid: 152
+    auth:
+      user: WS_SDVP
+      password: WS_SDVP
+    ticket:
+      base: https://desarrollo.oefa.gob.pe
+    useroefa: acerdan
+server:
+  servlet:
+    context-path: /tfa/backend
+
+
+
+
+
+
+

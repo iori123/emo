@@ -1,0 +1,182 @@
+# Nombre de los objetos a desplegar.
+name: backend
+# Nombre del espacio de trabajo (namespace) sobre kubernetes donde se desplegará el microservicio.
+namespace: tfa-qa
+# Versión (tag) del microservicio a desplegar. Valor por defecto "latest".
+version: 1.1.5
+
+# Configuración del Ingress a nivel del Kubernetes (https://kubernetes.io/docs/concepts/services-networking/service/)
+ingress:
+  # URL donde irá desplegada la aplicación.
+  url: calidad.oefa.gob.pe
+  # Path o contexto donde se expondrá la aplicación, por ejemplo "/my/app".
+  path: /tfa-backend
+  # Habilitar o deshabilitar la reescritura de path hacia "/", es decir que se elimine el path en la petición antes de enviarla a los pods (true|false).
+  rewrite: 
+    enabled: true
+  # Habilitar o deshabilitar PathPrefixStrip (true|false).  
+  PathPrefixStrip:
+    enable: false
+
+# Configuración de Deployment 
+deployment:
+  # Imagen utilizada en el despliegue (no modificar).
+  image: $OEFA_REGISTRY/$CI_PROJECT_PATH
+  # Puerto en el cual escucha el pod.
+  port: 8990
+  # Protocolo del puerto en el cual escucha el pod (TCP|UDP). Por defecto será TCP.
+  protocol:
+  # Modo de uso del secret (envFrom | volume) por defecto envFrom.  
+  secrets:
+    type: envFrom
+    # Si es tipo "volume" configurar lo siguiente.
+    #name:
+    #readOnly: True
+    #mountPath:
+  configmap:
+    type: envFrom
+    # Si es tipo "volume" configurar lo siguiente.
+    #name:
+    #readOnly: True
+    #mountPath:
+    #defaultMode: 
+
+# Creación de Secrets a nivel de Kubernetes (https://kubernetes.io/es/docs/concepts/configuration/secret/)
+secrets:
+  enabled: true
+  APPLICATION_OEFA_RIMA_API_ENDPOINT: 'https://calidad.oefa.gob.pe/zuul/rima-backend/rima/api'
+  BASE_HREF: 'https://calidad.oefa.gob.pe/siscore/monitoreo/'
+  DEPLOY_HREF: 'https://calidad.oefa.gob.pe/siscore/monitoreo/'
+  CONTEXT_PATH: '/'
+  DB_USERNAME: 'SDVP'
+  DB_PASSWORD: 'RlkE4pQ3XTRb'
+  DB_PORT: '1532'
+  DB_HOST: 'odadesa.oefa.gob.pe'
+  SERVICE_NAME: 'qaoefabd'
+  ALF_BASE: 'http://10.1.1.15:8080/alfresco'
+  ALF_SYSTEM_ID: '503'
+  ALF_DOCUMENT_ID: '152'
+  ALF_AUTH_USER: 'WS_SDVP'
+  ALF_AUTH_PASSWORD: 'WS_SDVP'
+  ALF_TICKET_BASE: 'https://calidad.oefa.gob.pe'
+  ALF_USER_OEFA: 'WS_SDVP'
+# variables front
+  url: 'https://calidad.oefa.gob.pe/tfa-backend'
+  url_siged: 'https://calidad.oefa.gob.pe/siged-rest'
+  url_alfresco: 'http://10.1.1.15:8080/alfresco'
+  url_sso2: 'https://calidad.oefa.gob.pe/sso2/OefaAdmSeg/seguridad'
+  base_href: '/tfa/mfe/'
+  id_aplicacion: '503'
+
+# Si es necesario usar uno o varios secrets externos (se puede configurar hasta 3 secrets externos)
+externalsecret1: ""
+externalsecret2: ""
+externalsecret3: ""
+
+# Creación de configmap (https://kubernetes.io/es/docs/concepts/configuration/configmap/)
+configmap: 
+  enabled: false
+
+# --
+# Configuraciones avanzadas
+# --
+
+# Configuración de reserva y límites de recursos de los pods (https://kubernetes.io/es/docs/concepts/configuration/manage-resources-containers/)
+resources:
+  requests:
+    enabled: false
+    # Memoria reservada por cada pod expresado en megabytes (Mi), por ejemplo 100 Megabytes sería "100Mi". 
+    memory:
+    # CPU reservado por cada pod en expresado microcores (m), por ejemplo un cuarto de core sería "250m", un core completo sería "1000m", etc.
+    cpu:
+  limits:
+    enabled: false
+    # Memoria máxima que puede usar el pod (default deployment.memory).
+    memory:
+    # CPU máximo que puede usar el pod (default deployment.cpu).
+    cpu:
+
+# Configuración del Horizontal Pod Autoscaling a nivel del Kubernetes (https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+hpa:
+  # Habilitar o deshabilitar la creación de hpa (true|false)
+  enabled: false
+  # Mínimo número de pods a levantar.
+  minReplicas:
+  # Máximo número de pods a escalar.
+  maxReplicas:
+  # Porcentaje de utilización del CPU asignado antes de escalar un pod adicional, se sugiere el valor 80.
+  targetCPUUtilizationPercentage:
+  # Porcentaje de memoria del CPU asignado antes de escalar un pod adicional.  
+  targetMemoryUtilizationPercentage:
+
+# Configuración de actuator.
+actuatorport:
+  # Habilitar o deshabilitar la creación del puerto adicional para su uso como actuator dentro del deployment.
+  enabled: false
+  # Puerto del actuator.
+  port:
+
+# Configuración de livenessProbe a nivel Kubernetes (https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+livenessProbe:
+  # Habilitar o deshabilitar la creación del livenessProbe.
+  enabled: false
+  #httpGet:
+  #  port: 
+  #  path: 
+  #  scheme: 
+  #failureThreshold: 
+  #successThreshold:
+  #periodSeconds:
+  #timeoutSeconds:
+
+# Configuración de readinessProbe a nivel Kubernetes (https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+readinessProbe:
+  enabled: false
+  #httpGet:
+  #  port: 
+  #  path: 
+  #  scheme: 
+  #failureThreshold: 
+  #successThreshold:
+  #periodSeconds:
+  #timeoutSeconds:
+
+# Configuración de startupProbe a nivel Kubernetes (https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+startupProbe:
+  enabled: false
+  #httpGet:
+  #  port: 
+  #  path: 
+  #  scheme: 
+  #failureThreshold: 
+  #successThreshold:
+  #periodSeconds:
+  #timeoutSeconds:
+
+# Configuración del Service Monitor a nivel de Kubernetes (https://observability.thomasriley.co.uk/prometheus/configuring-prometheus/using-service-monitors/)
+serviceMonitor:
+  enabled: false
+  path:
+  interval: 
+  scrapeTimeout: 
+  relabelings: []
+  metricRelabelings: []
+  honorLabels: false
+
+# Configuración del Security context en Kubernetes usado para correr los contenedores del pod con menos privilegios [no root] (https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+podSecurityContext:
+  enabled: false
+  #fsGroup: 1000
+
+# Configuración del Security context en Kubernetes usado para correr el contenedor principal con menos privilegios [no root] (https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+containerSecurityContext:
+  enabled: false
+  #runAsUser: 1001
+  #runAsNonRoot: true
+  #runAsGroup: 1001
+  #allowPrivilegeEscalation: false
+  #privileged: false
+  #capabilities:
+  #  drop:
+  #    - ALL
+  #readOnlyRootFilesystem: false
